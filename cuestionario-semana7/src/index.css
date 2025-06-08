@@ -8,10 +8,12 @@ body {
 .app-container {
   max-width: 800px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem;
   background: white;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 h1 {
@@ -70,4 +72,16 @@ button:hover {
 .order-input input {
   padding: 0.5rem;
   font-size: 1rem;
+}
+
+select {
+  width: 100%;
+  padding: 5px;
+  border-radius: 10px;
+}
+select option {
+  position: relative;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

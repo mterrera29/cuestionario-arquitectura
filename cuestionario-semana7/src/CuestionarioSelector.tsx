@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import App, { Pregunta } from './App';
+import App from './App';
 
 // Semana 1 - Versión 1
 const preguntasSemana1_v1 = [
@@ -1564,9 +1564,8 @@ const cuestionarios = [
   },
   {
     semana: 2,
-    preguntas: deduplicarPreguntas(preguntasSemana1_v1, preguntasSemana1_v2),
+    preguntas: deduplicarPreguntas(preguntasSemana2_v1, preguntasSemana2_v2),
   },
-  { semana: 2, preguntas: preguntasSemana2_v2 },
   {
     semana: 4,
     preguntas: deduplicarPreguntas(
@@ -1611,9 +1610,25 @@ export default function CuestionarioSelector() {
   }
 
   return (
-    <div>
-      <h1>Seleccioná un cuestionario</h1>
-      <ul>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <h1>Arquitectura de Computadoras📋</h1>
+      <h2>Seleccioná un cuestionario</h2>
+      <ul
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: '0px',
+        }}
+      >
         {cuestionarios.map((q, i) => (
           <li key={i} style={{ marginTop: '5px', listStyle: 'none' }}>
             <button onClick={() => setSeleccionado(i)}>

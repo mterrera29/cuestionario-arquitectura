@@ -5,7 +5,7 @@ export interface Pregunta {
   opciones: string[];
   correcta: number | number[];
   multiple?: boolean;
-  tipo?: 'multiple' | 'ordenar';
+  tipo?: string;
 }
 
 interface Props {
@@ -38,7 +38,7 @@ export default function App({ semana, preguntas, onVolver }: Props) {
     setRespuestas((prev) => ({ ...prev, [index]: actuales }));
   };
 
-  const corregir = () => setMostrarResultados(true);
+  const corregir = () => setMostrarResultados((prev) => !prev);
 
   const esCorrecta = (pregunta: Pregunta, rta: any): boolean => {
     if (pregunta.tipo === 'ordenar') {
@@ -54,93 +54,96 @@ export default function App({ semana, preguntas, onVolver }: Props) {
   };
 
   return (
-    <div>
-      <h1>Cuestionario Semana {semana}</h1>
-      {preguntas.map((p, i) => (
-        <div
-          key={i}
-          className='question-block'
-          style={{ whiteSpace: 'pre-line' }}
-        >
-          <p>
-            {i + 1}. {p.texto}
-          </p>
-          <div className='options'>
-            {p.tipo === 'ordenar' ? (
-              <div className='order-select'>
-                {Array.from({ length: p.opciones.length }).map(
-                  (_, posicion) => (
-                    <div key={posicion}>
-                      <label>
-                        Posición {posicion + 1}:{' '}
-                        <select
-                          value={
-                            respuestas[i]?.[posicion] !== undefined
-                              ? respuestas[i][posicion]
-                              : ''
-                          }
-                          onChange={(e) =>
-                            actualizarOrden(
-                              i,
-                              posicion,
-                              parseInt(e.target.value)
-                            )
-                          }
-                        >
-                          <option value=''>Seleccionar</option>
-                          {p.opciones.map((op, j) => (
-                            <option
-                              key={j}
-                              value={j}
-                              disabled={respuestas[i]?.includes(j)}
-                            >
-                              {op}
-                            </option>
-                          ))}
-                        </select>
-                      </label>
-                    </div>
-                  )
-                )}
-              </div>
-            ) : (
-              p.opciones.map((op, j) => {
-                const seleccionado = respuestas[i];
-                const checked = p.multiple
-                  ? (seleccionado || []).includes(j)
-                  : seleccionado === j;
-                return (
-                  <label key={j} style={{ whiteSpace: 'pre-line' }}>
-                    <input
-                      type={p.multiple ? 'checkbox' : 'radio'}
-                      name={`pregunta-${i}`}
-                      value={j}
-                      checked={checked}
-                      onChange={() =>
-                        p.multiple ? toggleMultiple(i, j) : seleccionar(i, j)
-                      }
-                    />{' '}
-                    {op}
-                  </label>
-                );
-              })
-            )}
-            {mostrarResultados && (
-              <p
-                className={
-                  esCorrecta(p, respuestas[i]) ? 'correct' : 'incorrect'
-                }
-              >
-                {esCorrecta(p, respuestas[i]) ? '✔ Correcto' : '✘ Incorrecto'}
-              </p>
-            )}
+    <>
+      <div>
+        <h1>Cuestionario Semana {semana}</h1>
+        {preguntas.map((p, i) => (
+          <div
+            key={i}
+            className='question-block'
+            style={{ whiteSpace: 'pre-line' }}
+          >
+            <p>
+              {i + 1}. {p.texto}
+            </p>
+            <div className='options'>
+              {p.tipo === 'ordenar' ? (
+                <div className='order-select'>
+                  {Array.from({ length: p.opciones.length }).map(
+                    (_, posicion) => (
+                      <div key={posicion}>
+                        <label>
+                          Posición {posicion + 1}:{' '}
+                          <select
+                            value={
+                              respuestas[i]?.[posicion] !== undefined
+                                ? respuestas[i][posicion]
+                                : ''
+                            }
+                            onChange={(e) =>
+                              actualizarOrden(
+                                i,
+                                posicion,
+                                parseInt(e.target.value)
+                              )
+                            }
+                          >
+                            <option value=''>Seleccionar</option>
+                            {p.opciones.map((op, j) => (
+                              <option
+                                key={j}
+                                value={j}
+                                disabled={respuestas[i]?.includes(j)}
+                              >
+                                {op}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                      </div>
+                    )
+                  )}
+                </div>
+              ) : (
+                p.opciones.map((op, j) => {
+                  const seleccionado = respuestas[i];
+                  const checked = p.multiple
+                    ? (seleccionado || []).includes(j)
+                    : seleccionado === j;
+                  return (
+                    <label key={j} style={{ whiteSpace: 'pre-line' }}>
+                      <input
+                        type={p.multiple ? 'checkbox' : 'radio'}
+                        name={`pregunta-${i}`}
+                        value={j}
+                        checked={checked}
+                        onChange={() =>
+                          p.multiple ? toggleMultiple(i, j) : seleccionar(i, j)
+                        }
+                      />{' '}
+                      {op}
+                    </label>
+                  );
+                })
+              )}
+              {mostrarResultados && (
+                <p
+                  className={
+                    esCorrecta(p, respuestas[i]) ? 'correct' : 'incorrect'
+                  }
+                >
+                  {esCorrecta(p, respuestas[i]) ? '✔ Correcto' : '✘ Incorrecto'}
+                </p>
+              )}
+            </div>
           </div>
-        </div>
-      ))}
-      <button onClick={corregir}>Corregir</button>
-      <button onClick={onVolver} style={{ marginLeft: '10px' }}>
-        Volver atrás
-      </button>
-    </div>
+        ))}
+
+        <button onClick={corregir}>Corregir</button>
+        <button onClick={onVolver} style={{ marginLeft: '10px' }}>
+          Volver atrás
+        </button>
+      </div>
+    </>
   );
 }
